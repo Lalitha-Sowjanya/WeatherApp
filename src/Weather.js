@@ -143,10 +143,9 @@ function WeatherApp() {
             marginLeft: "10px",
             flex: 1,
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            maxWidth: '350px', 
-            marginTop: '10px',
+            maxWidth: '400px', 
+            marginTop: '20px',
+            maxHeight: '520px',
           }}
         >
           {weather && (
@@ -156,8 +155,8 @@ function WeatherApp() {
                 borderRadius: '15px',
                 padding: '20px',
                 width: '100%',
-                maxWidth: '350px',
-                maxHeight: '480px',
+                maxWidth: '400px',
+                maxHeight: '520px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                 transition: 'transform 0.2s',
                 cursor: 'pointer',
