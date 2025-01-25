@@ -61,12 +61,18 @@ function WeatherApp() {
   }, [position.lat, position.lng]);
 
   const LocationMarker = () => {
-    useMapEvents({
+    const map = useMapEvents({
       click(e) {
         const { lat, lng } = e.latlng;
         setPosition({ lat, lng });
       },
     });
+
+    useEffect(() => {
+      if (map) {
+        map.setView([position.lat, position.lng], map.getZoom());
+      }
+    }, [map]);
 
     return position === null ? null : <Marker icon={customIcon} position={position}></Marker>;
   };
@@ -112,7 +118,7 @@ function WeatherApp() {
               maxWidth: "850px", 
             }}
             center={position}
-            zoom={10}
+            zoom={13}
           >
             <LayersControl position="topright">
               <BaseLayer checked name="OpenStreetMap">
@@ -146,7 +152,7 @@ function WeatherApp() {
           {weather && (
             <div
               style={{
-                background: 'rgba(255, 255, 255, 0.9)',
+                background: 'rgba(255, 255, 255, 0.8)',
                 borderRadius: '15px',
                 padding: '20px',
                 width: '100%',
