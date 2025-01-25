@@ -112,7 +112,7 @@ function WeatherApp() {
               maxWidth: "850px", 
             }}
             center={position}
-            zoom={13}
+            zoom={10}
           >
             <LayersControl position="topright">
               <BaseLayer checked name="OpenStreetMap">
