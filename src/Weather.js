@@ -101,13 +101,15 @@ function WeatherApp() {
           marginLeft: '10px', 
           marginTop: '20px',
           flex: 1,
-          maxWidth: '900px'  // Ensure max-width
+          borderRadius: '15px',
+          maxWidth: '850px'  
         }}>
           <MapContainer
             style={{
               height: "530px",
-              width: "100%", // Ensure it scales properly
-              maxWidth: "900px", // Ensure it doesn't get too large
+              width: "100%",
+              borderRadius: '15px',
+              maxWidth: "850px", 
             }}
             center={position}
             zoom={13}
@@ -137,8 +139,8 @@ function WeatherApp() {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            maxWidth: '330px', // Limit the width
-            marginTop: '20px',
+            maxWidth: '350px', 
+            marginTop: '10px',
           }}
         >
           {weather && (
@@ -148,8 +150,8 @@ function WeatherApp() {
                 borderRadius: '15px',
                 padding: '20px',
                 width: '100%',
-                maxWidth: '330px',
-                height: '500px',
+                maxWidth: '350px',
+                maxHeight: '480px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                 transition: 'transform 0.2s',
                 cursor: 'pointer',
