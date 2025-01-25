@@ -90,10 +90,25 @@ function WeatherApp() {
         <h1 style={{ margin: 0, fontSize: '24px', color: '#333' }}>WeatherApp.in</h1>
       </nav>
 
-      <div style={{ display: 'flex', justifyContent: 'space-around', padding: '20px', flexGrow: 1 }}>
-        <div style={{ marginLeft: '10px', marginTop: '20px' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-around', 
+        padding: '20px', 
+        flexGrow: 1, 
+        flexWrap: 'wrap' 
+      }}>
+        <div style={{ 
+          marginLeft: '10px', 
+          marginTop: '20px',
+          flex: 1,
+          maxWidth: '900px'  // Ensure max-width
+        }}>
           <MapContainer
-            style={{ height: "530px", width: "900px" }}
+            style={{
+              height: "530px",
+              width: "100%", // Ensure it scales properly
+              maxWidth: "900px", // Ensure it doesn't get too large
+            }}
             center={position}
             zoom={13}
           >
@@ -114,6 +129,7 @@ function WeatherApp() {
             <LocationMarker />
           </MapContainer>
         </div>
+
         <div
           style={{
             marginLeft: "10px",
@@ -121,6 +137,8 @@ function WeatherApp() {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            maxWidth: '330px', // Limit the width
+            marginTop: '20px',
           }}
         >
           {weather && (
@@ -129,7 +147,8 @@ function WeatherApp() {
                 background: 'rgba(255, 255, 255, 0.9)',
                 borderRadius: '15px',
                 padding: '20px',
-                width: '330px',
+                width: '100%',
+                maxWidth: '330px',
                 height: '500px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                 transition: 'transform 0.2s',
