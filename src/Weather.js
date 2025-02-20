@@ -140,7 +140,7 @@ function WeatherApp() {
     return position === null ? null : <Marker icon={customIcon} position={position}></Marker>;
   };
 
-
+  
   return (
     <div style={{
       backgroundImage: `url(${require('./Weatherbg.png')})`,
@@ -149,6 +149,7 @@ function WeatherApp() {
       flexDirection: 'column',
       height: '100%',
       width: '100%',
+      overflowX:'hidden'
     }}>
       <nav style={{
         backgroundColor: 'rgb(255, 255, 255)',
@@ -156,11 +157,16 @@ function WeatherApp() {
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
         textAlign: 'center',
         position: 'relative',
-        height: '40px',
-        flexWrap: 'wrap',
-        gap: '10px',
+        height: '60px',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingLeft: '20px',
+        paddingRight: '20px',
+        width:'100%'
       }}>
-        <h1 style={{ margin: 0, fontSize: '24px', color: '#333' }}>WeatherApp.in</h1>
+        <h1 style={{ margin: 0, fontSize: '24px', color: '#333',textAlign:'center', flex: 1 }}>WeatherApp.in</h1>
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -181,14 +187,14 @@ function WeatherApp() {
               fontSize: '16px',
               width: '250px',
               borderRadius: '5px',
-              marginRight: '10px',
+              marginRight: '50px',
               marginBottom: '20px',
               marginTop: '20px',
             }}
           />
         </div>
       </nav>
-    
+      
       {/* Suggestions Box */}
       {suggestions.length > 0 && (
   <div style={{
@@ -224,8 +230,6 @@ function WeatherApp() {
     ))}
   </div>
 )}
-
-    
       {/* The map and weather info sections */}
       <div style={{
         display: 'flex',
@@ -253,7 +257,6 @@ function WeatherApp() {
   center={position}
   zoom={13}
 >
-
             <LayersControl position="topright">
               <BaseLayer checked name="OpenStreetMap">
                 <TileLayer
@@ -326,35 +329,35 @@ function WeatherApp() {
       }}>
         <nav style={{
           backgroundColor: 'rgb(255, 255, 255)',
-          padding: '10px',
           boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
           textAlign: 'center',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
           position: 'relative',
-          boxSizing: 'border-box',
-          overflowX: 'hidden',
-          height:'65px',
+          height: '60px',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingLeft: '20px',
+          paddingRight: '20px',
+          width:'100%',
           marginBottom:'30px',
-          flexWrap: 'wrap',
-          gap: '10px',
+          padding:'10px'
         }}>
-          <h1 style={{ margin: 0, fontSize: '24px', color: '#333', position: 'absolute' }}>Day-wise Weather Outlook</h1>
+          <h1 style={{ marginLeft:'20px', fontSize: '24px', color: '#333', textAlign:'center',flex: 1 }}>Day-wise Weather Outlook</h1>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
             position: 'absolute',
             right: '20px',
+            zIndex: 10,
           }}>
             <label htmlFor="dateSelect" style={{ fontSize: '16px', fontWeight: 'bold', color: '#333' }}>Select Date :</label>
             <select 
               id="dateSelect"
               value={selectedDate} 
               onChange={(e) => setSelectedDate(e.target.value)} 
-              style={{ padding: '10px', fontSize: '16px', marginTop: '5px' }}
+              style={{ padding: '10px', fontSize: '16px', marginTop: '5px',marginRight:'20px' }}
             >
               {uniqueDates.map((date, index) => (
                 <option key={index} value={date}>{date}</option>
@@ -372,6 +375,7 @@ function WeatherApp() {
           gap: '10px',
           width: '100%',
           maxWidth: '1290px',
+          minWidth: '150px',
         }}>
           {filterForecastByDate(selectedDate).map((forecastItem, index) => (
             <div
@@ -386,6 +390,7 @@ function WeatherApp() {
                 padding: '20px',
                 boxSizing: 'border-box',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                border:'2px',
                 textAlign: 'left',
               }}
             >
