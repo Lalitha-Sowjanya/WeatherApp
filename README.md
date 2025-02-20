@@ -75,5 +75,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 =======
 # WeatherApp
-Displays live weather info specific to the selected location
+Displays live weather info specific to the selected location and weather outlook for next 5 days
 >>>>>>> 743f2d5862a97a283d9ae033793bde1ebfe330a1
