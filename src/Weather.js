@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents, LayersControl } from "re
 import axios from "axios";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import debounce from "lodash.debounce";  // Import debounce to reduce API calls
 
 const icons = {
   location: "./Icons/location.png",
@@ -75,7 +76,7 @@ function WeatherApp() {
     return forecast.filter(item => new Date(item.dt * 1000).toLocaleDateString() === date);
   };
 
-  const handleSearchInput = async (query) => {
+  const handleSearchInput = debounce(async (query) => {
     setSearchQuery(query);
     if (query.length > 0) {  // Start fetching after 1 character
       try {
@@ -92,7 +93,7 @@ function WeatherApp() {
       setSuggestions([]);  // Clear suggestions if the query is empty
         // Set loading to false even if there are no results
     }
-  };
+  },50);
 
   const handleSuggestionClick = (lat, lng) => {
     setPosition({ lat, lng });
