@@ -291,9 +291,9 @@ function WeatherApp() {
                 <strong>{new Date(forecastItem.dt * 1000).toLocaleDateString()} -{' '}
                 {new Date(forecastItem.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
               </p>
-              <p><img src={icons.temperature} alt="Temperature" style={{ width: '25px', marginRight: '5px' }} />Temp: {forecastItem.main.temp}°C</p>
-              <p><img src={icons.humidity} alt="Humidity" style={{ width: '25px', marginRight: '5px' }} />Humidity: {forecastItem.main.humidity}%</p>
-              <p><img src={icons.wind} alt="Wind" style={{ width: '25px', marginRight: '5px' }} />Wind: {forecastItem.wind.speed} m/s</p>
+              <p><img src={icons.temperature} alt="Temperature" style={{ width: '25px', marginRight: '5px' }} /><strong>Temp: </strong> {forecastItem.main.temp}°C</p>
+              <p><img src={icons.humidity} alt="Humidity" style={{ width: '25px', marginRight: '5px' }} /><strong>Humidity: </strong> {forecastItem.main.humidity}%</p>
+              <p><img src={icons.wind} alt="Wind" style={{ width: '25px', marginRight: '5px' }} /><strong>Wind: </strong> {forecastItem.wind.speed} m/s</p>
             </div>
           ))}
         </div>
