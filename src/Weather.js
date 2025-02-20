@@ -166,7 +166,7 @@ function WeatherApp() {
         paddingRight: '20px',
         width:'100%'
       }}>
-        <h1 style={{ margin: 0, fontSize: '24px', color: '#333',textAlign:'center', flex: 1 }}>WeatherApp.in</h1>
+        <h1 style={{ margin:'20px', fontSize: '24px', color: '#333',textAlign:'center', flex: 1 }}>WeatherApp.in</h1>
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -185,7 +185,7 @@ function WeatherApp() {
             style={{
               padding: '10px',
               fontSize: '16px',
-              width: '250px',
+              width: '180px',
               borderRadius: '5px',
               marginRight: '50px',
               marginBottom: '20px',
@@ -343,7 +343,7 @@ function WeatherApp() {
           marginBottom:'30px',
           padding:'10px'
         }}>
-          <h1 style={{ marginLeft:'20px', fontSize: '24px', color: '#333', textAlign:'center',flex: 1 }}>Day-wise Weather Outlook</h1>
+          <h1 style={{ margin:'20px', fontSize: '24px', color: '#333', textAlign:'center',flex: 1 }}>Day-wise Weather Outlook</h1>
           <div style={{
             display: 'flex',
             alignItems: 'center',
