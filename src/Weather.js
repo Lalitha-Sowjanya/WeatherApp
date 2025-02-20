@@ -239,7 +239,7 @@ function WeatherApp() {
           height:'65px',
           marginBottom:'30px'
         }}>
-          <h1 style={{ margin: 0, fontSize: '24px', color: '#333', position: 'absolute' }}>5-Day Weather Outlook</h1>
+          <h1 style={{ margin: 0, fontSize: '24px', color: '#333', position: 'absolute' }}>Day-wise Weather Outlook</h1>
           <div style={{
             display: 'flex',
             alignItems: 'center',
