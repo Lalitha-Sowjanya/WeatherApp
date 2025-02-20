@@ -159,14 +159,15 @@ function WeatherApp() {
         position: 'relative',
         height: '60px',
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: '20px',
         paddingRight: '20px',
-        width:'100%'
+        width:'100%',
+        flexWrap: 'wrap',
       }}>
-        <h1 style={{ marginRight:'20px', fontSize: '24px', color: '#333',textAlign:'center', flex: 1 }}>WeatherApp.in</h1>
+        <h1 style={{ marginRight:'20px', fontSize: '24px', color: '#333',textAlign:'center', flex: 1,marginBottom:'40px' }}>WeatherApp.in</h1>
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -334,16 +335,17 @@ function WeatherApp() {
           position: 'relative',
           height: '60px',
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingLeft: '20px',
           paddingRight: '20px',
           width:'100%',
           marginBottom:'30px',
-          padding:'10px'
+          padding:'10px',
+          flexWrap: 'wrap',
         }}>
-          <h1 style={{ margin:'20px', fontSize: '24px', color: '#333', textAlign:'center',flex: 1 }}>Day-wise Weather Outlook</h1>
+          <h1 style={{ margin:'20px', fontSize: '24px', color: '#333', textAlign:'center',flex: 1,marginBottom:'40px' }}>Day-wise Weather Outlook</h1>
           <div style={{
             display: 'flex',
             alignItems: 'center',
