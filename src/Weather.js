@@ -166,7 +166,7 @@ function WeatherApp() {
         paddingRight: '20px',
         width:'100%'
       }}>
-        <h1 style={{ margin:'20px', fontSize: '24px', color: '#333',textAlign:'center', flex: 1 }}>WeatherApp.in</h1>
+        <h1 style={{ marginRight:'20px', fontSize: '24px', color: '#333',textAlign:'center', flex: 1 }}>WeatherApp.in</h1>
         <div style={{
           display: 'flex',
           alignItems: 'center',
