@@ -30,9 +30,11 @@ function WeatherApp() {
   const [position, setPosition] = useState({ lat: 17.387140, lng: 78.491684 });
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
-  const [selectedDate, setSelectedDate] = useState("");  // Store the selected date
-  const [uniqueDates, setUniqueDates] = useState([]);  // Store unique dates for the dropdown
-
+  const [selectedDate, setSelectedDate] = useState("");
+  const [uniqueDates, setUniqueDates] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+ 
   const fetchWeather = async (lat, lon) => {
     try {
       const apiKey = "999cd62fae53aa8073bdff634c02d48e";
@@ -73,6 +75,33 @@ function WeatherApp() {
     return forecast.filter(item => new Date(item.dt * 1000).toLocaleDateString() === date);
   };
 
+  const handleSearchInput = async (query) => {
+    setSearchQuery(query);
+    if (query.length > 0) {  // Start fetching after 1 character
+      try {
+        const apiKey = "4540560483084f2e9a27195642c9a6a7";
+        const response = await axios.get(
+          `https://api.opencagedata.com/geocode/v1/json?q=${query}&key=${apiKey}`
+        );
+        setSuggestions(response.data.results);
+       // Set loading to false after the response
+      } catch (error) {
+        console.error("Error fetching autocomplete data:", error);
+      }
+    } else {
+      setSuggestions([]);  // Clear suggestions if the query is empty
+        // Set loading to false even if there are no results
+    }
+  };
+
+  const handleSuggestionClick = (lat, lng) => {
+    setPosition({ lat, lng });
+    fetchWeather(lat, lng);
+    fetchForecast(lat, lng);
+    setSearchQuery(""); // Clear input after selection
+    setSuggestions([]); // Clear suggestions after selection
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -110,26 +139,91 @@ function WeatherApp() {
     return position === null ? null : <Marker icon={customIcon} position={position}></Marker>;
   };
 
+
   return (
-    <div
-      style={{
-        backgroundImage: `url(${require('./Weatherbg.png')})`,
-        backgroundSize: 'cover',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        width: '100%',
-      }}
-    >
+    <div style={{
+      backgroundImage: `url(${require('./Weatherbg.png')})`,
+      backgroundSize: 'cover',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      width: '100%',
+    }}>
       <nav style={{
         backgroundColor: 'rgb(255, 255, 255)',
         padding: '10px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
         textAlign: 'center',
+        position: 'relative',
+        height: '40px',
       }}>
         <h1 style={{ margin: 0, fontSize: '24px', color: '#333' }}>WeatherApp.in</h1>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          position: 'absolute',
+          right: '20px',  // Align search bar to the right
+          top: '50%',
+          transform: 'translateY(-50%)',  // Vertically center the search input
+        }}>
+          <label htmlFor="searchInput" style={{ fontSize: '16px', fontWeight: 'bold', color: '#333' }}>Enter Location :</label>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => handleSearchInput(e.target.value)} // Update search query on typing
+            placeholder="Search for a location..."
+            style={{
+              padding: '10px',
+              fontSize: '16px',
+              width: '250px',
+              borderRadius: '5px',
+              marginRight: '10px',
+              marginBottom: '20px',
+              marginTop: '20px',
+            }}
+          />
+        </div>
       </nav>
+    
+      {/* Suggestions Box */}
+      {suggestions.length > 0 && (
+  <div style={{
+    maxHeight: '200px', // Set a fixed height
+    overflowY: 'auto',  // Enable scrolling when content exceeds height
+    background: 'white',
+    borderRadius: '5px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    position: 'absolute',
+    top: '60px', // Ensure it's 20px below the input field
+    zIndex: 1000, // Ensure it appears above other content
+    width: '290px',
+    padding: '10px',
+    textAlign: 'left',
+    right: '20px',  // Align suggestions to the right
+    boxSizing: 'border-box',  // Ensure padding doesn't affect width
+  }}>
+    {suggestions.map((suggestion, index) => (
+      <div
+        key={index}
+        style={{
+          padding: '10px',
+          cursor: 'pointer',
+          width: '100%',  // Ensure suggestions take up the full width of the container
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
+        onClick={() => handleSuggestionClick(suggestion.geometry.lat, suggestion.geometry.lng)}
+      >
+        {suggestion.formatted}
+      </div>
+    ))}
+  </div>
+)}
 
+    
+      {/* The map and weather info sections */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-around',
@@ -137,24 +231,26 @@ function WeatherApp() {
         flexGrow: 1,
         flexWrap: 'wrap',
       }}>
+        {/* Map Container */}
         <div style={{
           marginLeft: '10px',
           marginTop: '20px',
           flex: 1,
           borderRadius: '15px',
           maxWidth: '850px',
-          minWidth: '300px', // Make the map responsive for smaller screens
+          minWidth: '300px',
         }}>
           <MapContainer
-            style={{
-              height: "530px",
-              width: "100%",
-              borderRadius: '15px',
-              maxWidth: "850px",
-            }}
-            center={position}
-            zoom={13}
-          >
+  style={{
+    height: "calc(100vh - 100px)",  // Adjust height based on screen size
+    width: "100%",
+    borderRadius: '15px',
+    maxWidth: "850px",
+  }}
+  center={position}
+  zoom={13}
+>
+
             <LayersControl position="topright">
               <BaseLayer checked name="OpenStreetMap">
                 <TileLayer
@@ -172,18 +268,19 @@ function WeatherApp() {
             <LocationMarker />
           </MapContainer>
         </div>
+    
+        {/* Weather Information */}
+        <div style={{
+          marginLeft: '10px',
+          flex: 1,
+          display: 'flex',
+          maxWidth: '400px',
+          marginTop: '20px',
+          maxHeight: '520px',
+          minWidth: '250px', // Add minWidth for responsiveness
 
-        <div
-          style={{
-            marginLeft: "10px",
-            flex: 1,
-            display: 'flex',
-            maxWidth: '400px',
-            marginTop: '20px',
-            maxHeight: '520px',
-            minWidth: '250px', // Add minWidth for responsiveness
-          }}
-        >
+        }}>
+
           {weather && (
             <div
               style={{
@@ -208,14 +305,14 @@ function WeatherApp() {
               <p><img src={icons.wind} alt="Wind Speed" style={{ width: '25px', marginRight: '5px' }} /><strong>Wind Speed:</strong> {weather.wind.speed} m/s</p>
               <p><img src={icons.pressure} alt="Pressure" style={{ width: '25px', marginRight: '5px' }} /><strong>Pressure:</strong> {weather.main.pressure} hPa</p>
               <p><img src={icons.visibility} alt="Visibility" style={{ width: '25px', marginRight: '5px' }} /><strong>Visibility:</strong> {(weather.visibility / 1000).toFixed(2)} km</p>
-              <p><img src={icons.conditions} alt="Conditions" style={{ width: '25px', marginRight: '5px' }} /><strong>Conditions:</strong> {weather.weather[0].description}</p>
+              <p><img src={icons.conditions} alt="Conditions" style={{ width: '25px', marginRight: '5px' }} /><strong>Description:</strong> {weather.weather[0].description}</p>
               <p><img src={icons.clouds} alt="Cloudiness" style={{ width: '25px', marginRight: '5px' }} /><strong>Cloudiness:</strong> {weather.clouds.all}%</p>
               <p><img src={icons.sunrise} alt="Sunrise" style={{ width: '25px', marginRight: '5px' }} /><strong>Sunrise:</strong> {new Date(weather.sys.sunrise * 1000).toLocaleTimeString()}</p>
               <p><img src={icons.sunset} alt="Sunset" style={{ width: '25px', marginRight: '5px' }} /><strong>Sunset:</strong> {new Date(weather.sys.sunset * 1000).toLocaleTimeString()}</p>
             </div>
           )}
         </div>
-      </div>
+        </div>
 
       {/* Forecast section below */}
       <div style={{
@@ -293,12 +390,12 @@ function WeatherApp() {
               </p>
               <p><img src={icons.temperature} alt="Temperature" style={{ width: '25px', marginRight: '5px' }} /><strong>Temp: </strong> {forecastItem.main.temp}°C</p>
               <p><img src={icons.humidity} alt="Humidity" style={{ width: '25px', marginRight: '5px' }} /><strong>Humidity: </strong> {forecastItem.main.humidity}%</p>
-              <p><img src={icons.wind} alt="Wind" style={{ width: '25px', marginRight: '5px' }} /><strong>Wind: </strong> {forecastItem.wind.speed} m/s</p>
+              <p><img src={icons.conditions} alt="conditions" style={{ width: '25px', marginRight: '5px' }} /><strong>Description: </strong> {weather.weather[0].description}</p>
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </div>    
   );
 }
 
