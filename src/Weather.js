@@ -29,6 +29,9 @@ const { BaseLayer } = LayersControl;
 function WeatherApp() {
   const [position, setPosition] = useState({ lat: 17.387140, lng: 78.491684 });
   const [weather, setWeather] = useState(null);
+  const [forecast, setForecast] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");  // Store the selected date
+  const [uniqueDates, setUniqueDates] = useState([]);  // Store unique dates for the dropdown
 
   const fetchWeather = async (lat, lon) => {
     try {
@@ -42,22 +45,52 @@ function WeatherApp() {
     }
   };
 
+  const fetchForecast = async (lat, lon) => {
+    try {
+      const apiKey = "999cd62fae53aa8073bdff634c02d48e";
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`
+      );
+      setForecast(response.data.list); // This will give 3-hour intervals
+      extractUniqueDates(response.data.list);
+    } catch (error) {
+      console.error("Error fetching forecast data:", error);
+    }
+  };
+
+  const extractUniqueDates = (forecastData) => {
+    // Extract unique dates from the forecast data
+    const dates = forecastData.map(item => new Date(item.dt * 1000).toLocaleDateString());
+    const uniqueDatesList = [...new Set(dates)]; // Remove duplicates by converting to a Set
+    setUniqueDates(uniqueDatesList);
+    if (uniqueDatesList.length > 0) {
+      setSelectedDate(uniqueDatesList[0]);  // Set the initial selected date to the first date
+    }
+  };
+
+  const filterForecastByDate = (date) => {
+    // Filter forecast by the selected date
+    return forecast.filter(item => new Date(item.dt * 1000).toLocaleDateString() === date);
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         setPosition({ lat: latitude, lng: longitude });
-        fetchWeather(latitude, longitude); 
+        fetchWeather(latitude, longitude);
+        fetchForecast(latitude, longitude); // Fetch 5-day 3-hour forecast
       },
       (error) => {
         console.error("Error getting location:", error);
-        setPosition({ lat: 17.387140, lng: 78.491684 }); 
+        setPosition({ lat: 17.387140, lng: 78.491684 });
       }
     );
   }, []);
 
   useEffect(() => {
     fetchWeather(position.lat, position.lng);
+    fetchForecast(position.lat, position.lng); // Fetch forecast whenever position changes
   }, [position.lat, position.lng]);
 
   const LocationMarker = () => {
@@ -84,38 +117,40 @@ function WeatherApp() {
         backgroundSize: 'cover',
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height: '100%',
+        width: '100%',
       }}
     >
       <nav style={{
         backgroundColor: 'rgb(255, 255, 255)',
         padding: '10px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-        textAlign: 'center'
+        textAlign: 'center',
       }}>
         <h1 style={{ margin: 0, fontSize: '24px', color: '#333' }}>WeatherApp.in</h1>
       </nav>
 
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-around', 
-        padding: '20px', 
-        flexGrow: 1, 
-        flexWrap: 'wrap' 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-around',
+        padding: '20px',
+        flexGrow: 1,
+        flexWrap: 'wrap',
       }}>
-        <div style={{ 
-          marginLeft: '10px', 
+        <div style={{
+          marginLeft: '10px',
           marginTop: '20px',
           flex: 1,
           borderRadius: '15px',
-          maxWidth: '850px'  
+          maxWidth: '850px',
+          minWidth: '300px', // Make the map responsive for smaller screens
         }}>
           <MapContainer
             style={{
               height: "530px",
               width: "100%",
               borderRadius: '15px',
-              maxWidth: "850px", 
+              maxWidth: "850px",
             }}
             center={position}
             zoom={13}
@@ -143,9 +178,10 @@ function WeatherApp() {
             marginLeft: "10px",
             flex: 1,
             display: 'flex',
-            maxWidth: '400px', 
+            maxWidth: '400px',
             marginTop: '20px',
             maxHeight: '520px',
+            minWidth: '250px', // Add minWidth for responsiveness
           }}
         >
           {weather && (
@@ -178,6 +214,88 @@ function WeatherApp() {
               <p><img src={icons.sunset} alt="Sunset" style={{ width: '25px', marginRight: '5px' }} /><strong>Sunset:</strong> {new Date(weather.sys.sunset * 1000).toLocaleTimeString()}</p>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Forecast section below */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: '20px'
+      }}>
+        <nav style={{
+          backgroundColor: 'rgb(255, 255, 255)',
+          padding: '10px',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+          textAlign: 'center',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+          boxSizing: 'border-box',
+          overflowX: 'hidden',
+          height:'65px',
+          marginBottom:'30px'
+        }}>
+          <h1 style={{ margin: 0, fontSize: '24px', color: '#333', position: 'absolute' }}>5-Day Weather Outlook</h1>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            position: 'absolute',
+            right: '20px',
+          }}>
+            <label htmlFor="dateSelect" style={{ fontSize: '16px', fontWeight: 'bold', color: '#333' }}>Select Date :</label>
+            <select 
+              id="dateSelect"
+              value={selectedDate} 
+              onChange={(e) => setSelectedDate(e.target.value)} 
+              style={{ padding: '10px', fontSize: '16px', marginTop: '5px' }}
+            >
+              {uniqueDates.map((date, index) => (
+                <option key={index} value={date}>{date}</option>
+              ))}
+            </select>
+          </div>
+        </nav>
+
+        <div style={{
+          marginLeft:'20px',
+          marginBottom:'30px',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'flex-start',
+          gap: '10px',
+          width: '100%',
+          maxWidth: '1290px',
+        }}>
+          {filterForecastByDate(selectedDate).map((forecastItem, index) => (
+            <div
+              key={index}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: 'calc(25% - 10px)', 
+                minWidth: '250px',         
+                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                borderRadius: '10px',
+                padding: '20px',
+                boxSizing: 'border-box',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                textAlign: 'left',
+              }}
+            >
+              <p style={{ fontSize: '16px', textAlign:'center' }}>
+                <strong>{new Date(forecastItem.dt * 1000).toLocaleDateString()} -{' '}
+                {new Date(forecastItem.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
+              </p>
+              <p><img src={icons.temperature} alt="Temperature" style={{ width: '25px', marginRight: '5px' }} />Temp: {forecastItem.main.temp}°C</p>
+              <p><img src={icons.humidity} alt="Humidity" style={{ width: '25px', marginRight: '5px' }} />Humidity: {forecastItem.main.humidity}%</p>
+              <p><img src={icons.wind} alt="Wind" style={{ width: '25px', marginRight: '5px' }} />Wind: {forecastItem.wind.speed} m/s</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
