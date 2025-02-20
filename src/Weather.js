@@ -157,6 +157,8 @@ function WeatherApp() {
         textAlign: 'center',
         position: 'relative',
         height: '40px',
+        flexWrap: 'wrap',
+        gap: '10px',
       }}>
         <h1 style={{ margin: 0, fontSize: '24px', color: '#333' }}>WeatherApp.in</h1>
         <div style={{
@@ -320,7 +322,7 @@ function WeatherApp() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginTop: '20px'
+        marginTop: '20px',
       }}>
         <nav style={{
           backgroundColor: 'rgb(255, 255, 255)',
@@ -335,7 +337,9 @@ function WeatherApp() {
           boxSizing: 'border-box',
           overflowX: 'hidden',
           height:'65px',
-          marginBottom:'30px'
+          marginBottom:'30px',
+          flexWrap: 'wrap',
+          gap: '10px',
         }}>
           <h1 style={{ margin: 0, fontSize: '24px', color: '#333', position: 'absolute' }}>Day-wise Weather Outlook</h1>
           <div style={{
