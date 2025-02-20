@@ -243,7 +243,7 @@ function WeatherApp() {
         }}>
           <MapContainer
   style={{
-    height: "calc(100vh - 100px)",  // Adjust height based on screen size
+    height: "530px",
     width: "100%",
     borderRadius: '15px',
     maxWidth: "850px",
