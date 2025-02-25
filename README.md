@@ -1,6 +1,8 @@
 Link to the application: https://willowy-cendol-bae84d.netlify.app/
 
+![image](https://github.com/user-attachments/assets/be78bc2d-dbf0-4f6d-8a58-cecc42d84e04)
 
+![image](https://github.com/user-attachments/assets/dc4221ca-a5e8-4e2f-b3a3-70ea7aca1ad5)
 
 <<<<<<< HEAD
 # Getting Started with Create React App
